@@ -1,7 +1,6 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[javascript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.codeActionsOnSave": {
       "source.fixAll": false,
       "source.fixAll.eslint": true
@@ -9,7 +8,6 @@
   },
 
   "[javascriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.codeActionsOnSave": {
       "source.fixAll": false,
       "source.fixAll.eslint": true
@@ -17,7 +15,6 @@
   },
 
   "[typescript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.codeActionsOnSave": {
       "source.fixAll": false,
       "source.fixAll.eslint": true
@@ -25,7 +22,6 @@
   },
 
   "[typescriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.codeActionsOnSave": {
       "source.fixAll": false,
       "source.fixAll.eslint": true
@@ -33,7 +29,6 @@
   },
 
   "[vue]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.codeActionsOnSave": {
       "source.fixAll": false,
       "source.fixAll.eslint": true
