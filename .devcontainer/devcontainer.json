@@ -1,0 +1,22 @@
+// See https://containers.dev/implementors/json_reference/ for configuration reference
+{
+  "name": "mobilesuica-xlsx",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "Vue.vscode-typescript-vue-plugin",
+        "Vue.volar"
+      ]
+    }
+  },
+  "remoteUser": "node",
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/pnpm:2": {},
+    "ghcr.io/dhoeric/features/act:1": {}
+  }
+}
