@@ -1,4 +1,5 @@
 import { createVuetify } from 'vuetify';
+import { defineNuxtPlugin } from '#app';
 
 const vuetify = createVuetify({
   ssr: true,
