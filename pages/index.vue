@@ -4,6 +4,14 @@
   const loginType: Ref<'MobileSuica' | 'MyJR-EAST'> = ref('MobileSuica');
   const password = ref('');
   const email = ref('');
+
+  const captcha = ref('');
+
+  onMounted(() => {
+    $fetch('/api/captcha').then((base64) => {
+      captcha.value = `data:image/gif;base64,${base64}`;
+    });
+  });
 </script>
 
 <template>
@@ -19,6 +27,7 @@
           </v-radio-group>
           <v-text-field v-model="email" required label="メールアドレス" />
           <v-text-field v-model="password" required label="パスワード" />
+          <div><img :src="captcha" /></div>
         </v-form>
       </v-col>
       <v-col cols="12" sm="2" />
