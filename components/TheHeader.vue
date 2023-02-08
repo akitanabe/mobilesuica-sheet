@@ -1,3 +1,3 @@
 <template>
-  <v-app-bar color="green" title="MobileSuica-Xlsx"></v-app-bar>
+  <v-app-bar color="green" title="MobileSuica-Sheet"></v-app-bar>
 </template>

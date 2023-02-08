@@ -1,4 +1,5 @@
 {
+  "name": "mobilesuica-sheet",
   "private": true,
   "scripts": {
     "build": "nuxt build",
