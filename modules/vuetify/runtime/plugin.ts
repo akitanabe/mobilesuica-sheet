@@ -7,4 +7,6 @@ const vuetify = createVuetify({
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(vuetify);
+
+  return { provide: { vuetify } };
 });
