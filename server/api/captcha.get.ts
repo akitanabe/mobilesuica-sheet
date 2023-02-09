@@ -19,7 +19,7 @@ function downloadCaptchaImage(response: client.FetchResult) {
   $img.first().download();
 
   return new Promise<string>((resolve) => {
-    notify.on('downloaded', (base64: string) => resolve(base64));
+    notify.once('downloaded', (base64: string) => resolve(base64));
   });
 }
 
