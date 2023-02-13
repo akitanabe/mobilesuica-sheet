@@ -96,8 +96,8 @@ function serialize(params: SearchParams): string {
 }
 
 class MobilesuicaClient {
-  constructor(options: ExtendOptions = {}) {
-    this.cookies = {};
+  constructor(options: ExtendOptions = {}, cookies: Cookies = {}) {
+    this.cookies = { ...cookies };
     this.defaults = { ...options };
   }
 
