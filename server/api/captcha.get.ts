@@ -74,10 +74,11 @@ export default defineEventHandler(async (event) => {
     const res = await client.get(`${mobileSuicaBaseUrl}/index.aspx`);
     const $ = $load(res.body);
 
-    const captcha = await downloadCaptchaImage(client, $);
-
+    // ログイン時にPOSTするURLの取得
     const postPath = $('#form1').attr('action') ?? '';
     const postUrl = `${mobileSuicaBaseUrl}/${postPath}`;
+
+    // ログインに必要なパラメータを取得
     const mobileSuicaLoginParams = getMobileSuicaLoginParams($);
 
     const mobileSuicaSessionLoing: MobileSuicaSessionLogin = {
@@ -88,7 +89,8 @@ export default defineEventHandler(async (event) => {
 
     event.context.session.login = mobileSuicaSessionLoing;
 
-    return captcha;
+    // キャプチャを取得
+    return await downloadCaptchaImage(client, $);
   } catch (e) {
     return 'error';
   }
