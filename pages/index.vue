@@ -1,6 +1,13 @@
 <script lang="ts" setup>
-  const { loginType, email, captcha, captchaImage, password, setCaptchaImage } =
-    useLogin();
+  const {
+    loginType,
+    email,
+    captcha,
+    captchaImage,
+    password,
+    setCaptchaImage,
+    login,
+  } = useLogin();
 
   onMounted(() => {
     setCaptchaImage();
@@ -52,7 +59,19 @@
               />
             </v-col>
           </v-row>
-          <v-row></v-row>
+          <v-row justify="center">
+            <v-col cols="4">
+              <v-btn
+                variant="tonal"
+                block
+                color="info"
+                size="large"
+                @click="login"
+              >
+                ログイン
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-form>
       </v-col>
       <v-col cols="12" sm="2" />

@@ -108,7 +108,7 @@ class MobilesuicaClient {
   private browser: keyof typeof ua = 'chrome';
 
   private buildClient(onceOptions: ExtendOptions = {}): Got {
-    const headers = { ...this.defaults.headers, ...onceOptions?.headers };
+    const headers = { ...this.defaults.headers, ...onceOptions.headers };
 
     headers['User-Agent'] = ua[this.browser];
     headers.Cookie = Object.entries(this.cookies)
@@ -146,7 +146,7 @@ class MobilesuicaClient {
 
     const formdataStr = serialize(formdata);
 
-    const res = await client.get(urlobj.href, {
+    const res = await client.post(urlobj.href, {
       body: formdataStr,
     });
 

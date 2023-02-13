@@ -13,6 +13,24 @@ const setCaptchaImage = () => {
   });
 };
 
+const login = async () => {
+  const user = {
+    email: email.value,
+    password: password.value,
+    captcha: captcha.value,
+  };
+
+  $fetch('/api/login', { method: 'POST', body: user });
+};
+
 export const useLogin = () => {
-  return { loginType, email, password, captcha, captchaImage, setCaptchaImage };
+  return {
+    loginType,
+    email,
+    password,
+    captcha,
+    captchaImage,
+    setCaptchaImage,
+    login,
+  };
 };
