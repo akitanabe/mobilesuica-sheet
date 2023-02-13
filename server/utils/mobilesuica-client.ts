@@ -176,6 +176,10 @@ class MobilesuicaClient {
     // SJISでエンコードされているのでUTF-8へ変換
     res.body = iconv.decode(res.rawBody, 'sjis');
   }
+
+  getCookies() {
+    return this.cookies;
+  }
 }
 
 export default MobilesuicaClient;
