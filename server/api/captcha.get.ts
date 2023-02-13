@@ -1,5 +1,6 @@
 import { CheerioAPI, load as $load } from 'cheerio';
 import { extractCheerioVal } from '../utils/cheerio-helpers';
+import type { MobileSuicaLoginParams, MobileSuicaSessionLogin } from './types';
 import MobilesuicaClient from '@/server/utils/mobilesuica-client';
 
 const mobileSuicaBaseUrl = 'https://www.mobilesuica.com';
@@ -27,22 +28,6 @@ function downloadCaptchaImage(
       });
   });
 }
-
-type MobileSuicaLoginParams = {
-  __EVENTTARGET: string;
-  __EVENTARGUMENT: string;
-  __VIEWSTATE: string;
-  __VIEWSTATEGENERATOR: string;
-  __VIEWSTATEENCRYPTED: string;
-  baseVariable: string;
-  baseVarLogoutBtn: string;
-  MailAddress: string;
-  Password: string;
-  WebCaptcha1_clientState: string;
-  WebCaptcha1__editor_clientState: string;
-  WebCaptcha1__editor: string;
-  LOGIN: string;
-};
 
 type MobileSuicaLoginKeys = keyof MobileSuicaLoginParams;
 
@@ -95,11 +80,13 @@ export default defineEventHandler(async (event) => {
     const postUrl = `${mobileSuicaBaseUrl}/${postPath}`;
     const mobileSuicaLoginParams = getMobileSuicaLoginParams($);
 
-    event.context.session.login = {
+    const mobileSuicaSessionLoing: MobileSuicaSessionLogin = {
       cookies: client.getCookies(),
       params: mobileSuicaLoginParams,
       url: postUrl,
     };
+
+    event.context.session.login = mobileSuicaSessionLoing;
 
     return captcha;
   } catch (e) {
