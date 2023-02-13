@@ -88,11 +88,10 @@ export default defineEventHandler(async (event) => {
   try {
     const res = await client.get(`${mobileSuicaBaseUrl}/index.aspx`);
     const $ = $load(res.body);
-    const $form = $('#form1');
 
     const captcha = await downloadCaptchaImage(client, $);
 
-    const postPath = $form.attr('action') ?? '';
+    const postPath = $('#form1').attr('action') ?? '';
     const postUrl = `${mobileSuicaBaseUrl}/${postPath}`;
     const mobileSuicaLoginParams = getMobileSuicaLoginParams($);
 
