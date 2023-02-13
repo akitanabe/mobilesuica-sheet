@@ -96,6 +96,7 @@ export default defineEventHandler(async (event) => {
     const mobileSuicaLoginParams = getMobileSuicaLoginParams($);
 
     event.context.session.login = {
+      cookies: client.getCookies(),
       params: mobileSuicaLoginParams,
       url: postUrl,
     };
