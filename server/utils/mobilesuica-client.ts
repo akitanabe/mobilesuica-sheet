@@ -70,7 +70,7 @@ function encodeURIForSjis(text: string): string {
 }
 
 // 入力されたCookieを上書きする
-type Cookies = Record<string, string>;
+export type Cookies = Record<string, string>;
 function toNewCookies(newCookies: Cookies, cookie: string): Cookies {
   const [key, value] = cookie.split('=');
 
@@ -177,7 +177,7 @@ class MobilesuicaClient {
     res.body = iconv.decode(res.rawBody, 'sjis');
   }
 
-  getCookies() {
+  getCookies(): Cookies {
     return this.cookies;
   }
 }
