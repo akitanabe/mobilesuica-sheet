@@ -1,13 +1,11 @@
 import { load } from 'cheerio';
-import fetchSuicaData from '../utils/fetch-suicadata';
-import { MobileSuicaLoginParams, MobileSuicaSessionLogin } from './types';
+import {
+  MobileSuicaLoginParams,
+  MobileSuicaSessionAuth,
+  MobileSuicaSessionLogin,
+  UserInputBody,
+} from './types';
 import MobilesuicaClient from '@/server/utils/mobilesuica-client';
-
-type UserInputParams = {
-  email: string;
-  password: string;
-  captcha: string;
-};
 
 const mobileSuicaBaseUrl = 'https://www.mobilesuica.com';
 
@@ -15,7 +13,7 @@ async function login(
   url: string,
   client: MobilesuicaClient,
   params: MobileSuicaLoginParams,
-  { email, password, captcha }: UserInputParams
+  { email, password, captcha }: UserInputBody
 ): Promise<void> {
   const formdata: MobileSuicaLoginParams = {
     ...params,
@@ -87,7 +85,7 @@ async function transitionSuicaDisp(url: string, client: MobilesuicaClient) {
 }
 
 // Index => SuicaChangeTransfer => SuicaDisp
-async function transition(client: MobilesuicaClient): Promise<string> {
+async function transition(client: MobilesuicaClient): Promise<void> {
   const indexUrl = `${mobileSuicaBaseUrl}/Index.aspx`;
 
   const suicaChangeTransferUrl = await transitionIndex(indexUrl, client);
@@ -98,32 +96,41 @@ async function transition(client: MobilesuicaClient): Promise<string> {
   );
 
   await transitionSuicaDisp(suicaDispUrl, client);
-
-  return suicaDispUrl;
 }
 
 export default defineEventHandler(async (event) => {
-  if (event.context.session.login === undefined) {
-    throw new Error('Should reflesh captcha image.');
-  }
-
-  const user = await readBody<UserInputParams>(event);
-
-  const { cookies, params, url } = event.context.session
-    .login as MobileSuicaSessionLogin;
-  const client = new MobilesuicaClient({}, cookies);
+  const res = { ok: false };
+  const { session } = event.context;
 
   try {
-    await login(url, client, params, user);
+    if (session.login === undefined) {
+      throw new Error('Should reflesh captcha image.');
+    }
 
-    const suicaDispUrl = await transition(client);
+    const body = await readBody<UserInputBody>(event);
 
-    const suicaData = await fetchSuicaData(suicaDispUrl, client);
+    const { cookies, params, url } = event.context.session
+      .login as MobileSuicaSessionLogin;
 
-    return JSON.stringify(suicaData);
+    const client = new MobilesuicaClient({}, cookies);
+
+    await login(url, client, params, body);
+
+    await transition(client);
+
+    const auth: MobileSuicaSessionAuth = {
+      cookies: client.getCookies(),
+      user: { email: body.email, password: body.password },
+    };
+
+    session.auth = auth;
+
+    res.ok = true;
   } catch (e) {
     if (e instanceof Error) {
       console.error(e.message);
     }
   }
+
+  return res;
 });

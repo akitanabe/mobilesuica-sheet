@@ -22,4 +22,49 @@ type MobileSuicaSessionLogin = {
   url: string;
 };
 
-export { MobileSuicaLoginParams, MobileSuicaSessionLogin };
+type MobileSuicaSessionAuth = {
+  cookies: Cookies;
+  user: { email: string; password: string };
+};
+
+type UserInputBody = {
+  email: string;
+  password: string;
+  captcha: string;
+};
+
+type SuicaDataPostParams =
+  | {
+      baseVariable: string;
+      specifyYearMonth: string;
+      specifyDay: string;
+      SEARCH: '検索';
+    }
+  | {};
+
+type SDdate = string;
+type SDtypeIn = string;
+type SDlocationIn = string;
+type SDtypeOut = string;
+type SDlocationOut = string;
+type SDbalance = number;
+type SDprice = number;
+
+type SuicaData = [
+  SDdate,
+  SDtypeIn,
+  SDlocationIn,
+  SDtypeOut,
+  SDlocationOut,
+  SDbalance,
+  SDprice
+];
+
+export {
+  MobileSuicaLoginParams,
+  MobileSuicaSessionLogin,
+  MobileSuicaSessionAuth,
+  UserInputBody,
+  SuicaDataPostParams,
+  SuicaData,
+};
