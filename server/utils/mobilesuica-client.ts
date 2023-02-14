@@ -178,7 +178,7 @@ class MobilesuicaClient {
   }
 
   getCookies(): Cookies {
-    return this.cookies;
+    return { ...this.cookies };
   }
 }
 
