@@ -57,7 +57,9 @@
               <span class="captcha-image">
                 <v-progress-circular
                   v-if="captchaImage == ''"
-                  model-value="1"
+                  model-value="10"
+                  :size="40"
+                  :width="4"
                   indeterminate
                   color="blue"
                 ></v-progress-circular>
@@ -119,11 +121,12 @@
       column-gap: 1rem;
 
       .captcha-image {
-        text-align: center;
         width: 175px;
         min-width: 175px;
         height: 68px;
         min-height: 68px;
+        display: grid;
+        place-items: center;
       }
     }
   }
