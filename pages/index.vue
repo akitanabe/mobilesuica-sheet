@@ -2,6 +2,7 @@
   const {
     loginType,
     email,
+    loading,
     captcha,
     captchaImage,
     password,
@@ -54,13 +55,20 @@
           <div class="captcha-wrapper">
             <div class="flex">
               <span class="captcha-image">
-                <img :src="captchaImage" />
+                <v-progress-circular
+                  v-if="captchaImage == ''"
+                  model-value="1"
+                  indeterminate
+                  color="blue"
+                ></v-progress-circular>
+                <img v-else :src="captchaImage" />
               </span>
               <span class="captcha-image-reload-wrapper">
                 <v-btn
                   class="captcha-image-reload"
                   icon="mdi-reload"
                   color="success"
+                  :disabled="loading"
                   @click="setCaptchaImage"
                 ></v-btn>
               </span>
@@ -74,7 +82,13 @@
             </div>
           </div>
           <div class="center">
-            <v-btn variant="tonal" color="info" size="large" @click="login">
+            <v-btn
+              variant="tonal"
+              color="info"
+              size="large"
+              :disabled="loading"
+              @click="login"
+            >
               ログイン
             </v-btn>
           </div>
@@ -105,8 +119,11 @@
       column-gap: 1rem;
 
       .captcha-image {
+        text-align: center;
         width: 175px;
         min-width: 175px;
+        height: 68px;
+        min-height: 68px;
       }
     }
   }

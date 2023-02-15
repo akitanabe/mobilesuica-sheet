@@ -8,15 +8,30 @@ const email = ref('');
 const captcha = ref('');
 const captchaImage = ref('');
 
+const loading = ref(false);
+
 const setCaptchaImage = () => {
+  if (loading.value) {
+    return;
+  }
+
+  captchaImage.value = '';
+  loading.value = true;
+
   $fetch('/api/captcha').then((base64) => {
     captchaImage.value = `data:image/gif;base64,${base64}`;
+    loading.value = false;
   });
 };
 
 type Result = { ok: boolean; data: SuicaData[] };
 
 const login = async () => {
+  if (loading.value) {
+    return;
+  }
+
+  loading.value = true;
   const user = {
     email: email.value,
     password: password.value,
@@ -27,6 +42,8 @@ const login = async () => {
     method: 'POST',
     body: user,
   });
+
+  loading.value = false;
 
   if (res.ok) {
     navigateTo('/sheet');
@@ -40,6 +57,7 @@ export const useLogin = () => {
     password,
     captcha,
     captchaImage,
+    loading,
     setCaptchaImage,
     login,
   };
