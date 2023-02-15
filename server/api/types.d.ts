@@ -25,6 +25,7 @@ type MobileSuicaSessionLogin = {
 type MobileSuicaSessionAuth = {
   cookies: Cookies;
   user: { email: string; password: string };
+  data?: SuicaData[];
 };
 
 type UserInputBody = {

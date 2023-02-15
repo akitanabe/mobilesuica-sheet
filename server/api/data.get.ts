@@ -113,12 +113,18 @@ export default defineEventHandler(async (event) => {
 
     const auth = session.auth as MobileSuicaSessionAuth;
 
-    const client = new MobilesuicaClient({}, { ...auth.cookies });
+    if (auth.data) {
+      res.data = auth.data;
+    } else {
+      const client = new MobilesuicaClient({}, { ...auth.cookies });
 
-    const data = await fetchSuicaData(suicaDispUrl, client);
+      const data = await fetchSuicaData(suicaDispUrl, client);
+
+      auth.data = data;
+      res.data = data;
+    }
 
     res.ok = true;
-    res.data = data;
   } catch (e) {
     if (e instanceof Error) {
       console.error(e.message);
