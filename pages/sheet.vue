@@ -1,7 +1,10 @@
 <script lang="ts" setup>
   const { setSheetsData, sheetsdata, cols, months, selected } = useSheet();
-
-  await setSheetsData();
+  try {
+    await setSheetsData();
+  } catch (e) {
+    navigateTo('/');
+  }
 </script>
 <template>
   <v-container>
