@@ -3,6 +3,8 @@ import {
   MobileSuicaLoginParams,
   MobileSuicaSessionAuth,
   MobileSuicaSessionLogin,
+  ResultError,
+  ResultSuccess,
   UserInputBody,
 } from './types';
 import MobilesuicaClient from '@/server/utils/mobilesuica-client';
@@ -99,10 +101,11 @@ async function transition(client: MobilesuicaClient): Promise<void> {
 }
 
 export default defineEventHandler(async (event) => {
-  const res = { ok: false };
   const { session } = event.context;
 
   try {
+    const res: ResultSuccess = { ok: true };
+
     if (session.login === undefined) {
       throw new Error('Should reflesh captcha image.');
     }
@@ -125,12 +128,13 @@ export default defineEventHandler(async (event) => {
 
     session.auth = auth;
 
-    res.ok = true;
+    return res;
   } catch (e) {
+    const res: ResultError = { ok: false, message: '' };
     if (e instanceof Error) {
-      console.error(e.message);
+      res.message = e.message;
     }
-  }
 
-  return res;
+    return res;
+  }
 });

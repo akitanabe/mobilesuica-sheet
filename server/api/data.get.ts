@@ -4,6 +4,8 @@ import MobilesuicaClient from '../utils/mobilesuica-client';
 import createSuicaDataConverter from '../utils/suicadata-converter';
 import {
   MobileSuicaSessionAuth,
+  ResultSuccess,
+  ResultError,
   SuicaData,
   SuicaDataPostParams,
 } from './types';
@@ -100,13 +102,11 @@ async function fetchSuicaData(
   return [...stack, suicadata].flat();
 }
 
-type Result = { ok: boolean; data?: SuicaData[]; message?: string };
 export default defineEventHandler(async (event) => {
   const { session } = event.context;
 
-  const res: Result = { ok: false };
-
   try {
+    const res: ResultSuccess = { ok: true };
     if (session.auth === undefined) {
       throw new Error('SuicaData Authoraization failed.');
     }
@@ -124,12 +124,13 @@ export default defineEventHandler(async (event) => {
       res.data = data;
     }
 
-    res.ok = true;
+    return res;
   } catch (e) {
+    const res: ResultError = { ok: false, message: '' };
     if (e instanceof Error) {
-      console.error(e.message);
+      res.message = e.message;
     }
-  }
 
-  return res;
+    return res;
+  }
 });
