@@ -3,11 +3,11 @@ import { extractCheerioVal } from '../utils/cheerio-helpers';
 import MobilesuicaClient from '../utils/mobilesuica-client';
 import createSuicaDataConverter from '../utils/suicadata-converter';
 import {
-  MobileSuicaSessionAuth,
   ResultSuccess,
   ResultError,
   SuicaData,
   SuicaDataPostParams,
+  SessionData,
 } from './types';
 
 function getFormData(
@@ -103,15 +103,18 @@ async function fetchSuicaData(
 }
 
 export default defineEventHandler(async (event) => {
-  const { session } = event.context;
+  const runtimeConfig = useRuntimeConfig();
+  const session = await useSession<SessionData>(event, {
+    password: runtimeConfig.secret,
+  });
 
   try {
     const res: ResultSuccess = { ok: true };
-    if (session.auth === undefined) {
+    if (session.data.auth === undefined) {
       throw new Error('SuicaData Authoraization failed.');
     }
 
-    const auth = session.auth as MobileSuicaSessionAuth;
+    const auth = session.data.auth;
 
     if (auth.data) {
       res.data = auth.data;
@@ -120,8 +123,15 @@ export default defineEventHandler(async (event) => {
 
       const data = await fetchSuicaData(suicaDispUrl, client);
 
-      auth.data = data;
       res.data = data;
+
+      await session.update((sessiondata) => {
+        if (sessiondata.auth !== undefined) {
+          sessiondata.auth.data = data;
+        }
+
+        return sessiondata;
+      });
     }
 
     return res;

@@ -64,10 +64,16 @@ type SuicaData = [
 type ResultSuccess = { ok: true; data?: SuicaData[] };
 type ResultError = { ok: false; message: string };
 
+type SessionData = {
+  login?: MobileSuicaSessionLogin;
+  auth?: MobileSuicaSessionAuth;
+};
+
 export {
   MobileSuicaLoginParams,
   MobileSuicaSessionLogin,
   MobileSuicaSessionAuth,
+  SessionData,
   UserInputBody,
   SuicaDataPostParams,
   SuicaData,
