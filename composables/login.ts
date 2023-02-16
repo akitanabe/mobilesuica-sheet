@@ -1,5 +1,5 @@
 import { Ref } from 'vue';
-import { SuicaData } from '~~/server/api/types';
+import { ResultSuccess } from '@/server/api/types';
 
 const loginType: Ref<'MobileSuica' | 'MyJR-EAST'> = ref('MobileSuica');
 const password = ref('');
@@ -10,21 +10,23 @@ const captchaImage = ref('');
 
 const loading = ref(false);
 
-const setCaptchaImage = () => {
+const setCaptchaImage = async () => {
   if (loading.value) {
     return;
+  }
+
+  if (captchaImage.value !== '') {
+    URL.revokeObjectURL(captchaImage.value);
   }
 
   captchaImage.value = '';
   loading.value = true;
 
-  $fetch('/api/captcha').then((base64) => {
-    captchaImage.value = `data:image/gif;base64,${base64}`;
-    loading.value = false;
-  });
-};
+  const image = await $fetch<Blob>('/api/captcha', { responseType: 'blob' });
+  captchaImage.value = URL.createObjectURL(image);
 
-type Result = { ok: boolean; data: SuicaData[] };
+  loading.value = false;
+};
 
 const login = async () => {
   if (loading.value) {
@@ -38,7 +40,7 @@ const login = async () => {
     captcha: captcha.value,
   };
 
-  const res = await $fetch<Result>('/api/login', {
+  const res = await $fetch<ResultSuccess>('/api/login', {
     method: 'POST',
     body: user,
   });

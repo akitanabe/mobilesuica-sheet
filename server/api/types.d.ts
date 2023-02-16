@@ -61,6 +61,9 @@ type SuicaData = [
   SDprice
 ];
 
+type ResultSuccess = { ok: true; data?: SuicaData[] };
+type ResultError = { ok: false; message: string };
+
 export {
   MobileSuicaLoginParams,
   MobileSuicaSessionLogin,
@@ -68,4 +71,6 @@ export {
   UserInputBody,
   SuicaDataPostParams,
   SuicaData,
+  ResultSuccess,
+  ResultError,
 };
