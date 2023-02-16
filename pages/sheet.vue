@@ -1,36 +1,29 @@
 <script lang="ts" setup>
-  const suicadata = reactive<{ data: string[][] }>({ data: [] });
-  type Result = { ok: boolean; data: string[][] };
+  const { setSheetsData, sheetsdata, cols, months, selected } = useSheet();
 
-  const cols = [
-    '月日',
-    '種別',
-    '利用場所',
-    '種別',
-    '利用場所',
-    '残高',
-    '入金・利用額',
-  ];
-
-  $fetch<Result>('/api/data').then((res) => {
-    console.log(res);
-    if (res.ok) {
-      suicadata.data = res.data;
-    } else {
-      navigateTo('/');
-    }
-  });
+  await setSheetsData();
 </script>
 <template>
   <v-container>
     <v-row>
       <v-col cols="12">
+        <v-tabs
+          v-model="selected"
+          color="deep-purple-accent-4"
+          align-tabs="center"
+        >
+          <v-tab v-for="month in months" :key="month" :value="month">
+            {{ month }}
+          </v-tab>
+        </v-tabs>
         <v-table>
           <thead>
-            <th v-for="(name, i) in cols" :key="i">{{ name }}</th>
+            <tr>
+              <th v-for="(name, i) in cols" :key="i">{{ name }}</th>
+            </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, i) in suicadata.data" :key="i">
+            <tr v-for="(row, i) in sheetsdata[selected]" :key="i">
               <td v-for="(cell, j) in row" :key="j">{{ cell }}</td>
             </tr>
           </tbody>
