@@ -67,16 +67,20 @@ function getMobileSuicaLoginParams($: CheerioAPI): MobileSuicaLoginParams {
   }, mobileSuicaLoginParams);
 }
 
+function getMobileSuicaLoginPostUrl($: CheerioAPI): string {
+  const postPath = $('#form1').attr('action') ?? '';
+  return `${mobileSuicaBaseUrl}/${postPath}`;
+}
+
 export default defineEventHandler(async (event) => {
   const client = new MobilesuicaClient();
 
   try {
     const res = await client.get(`${mobileSuicaBaseUrl}/index.aspx`);
-    const $ = $load(res.body);
+    const $ = load(res.body);
 
     // ログイン時にPOSTするURLの取得
-    const postPath = $('#form1').attr('action') ?? '';
-    const postUrl = `${mobileSuicaBaseUrl}/${postPath}`;
+    const postUrl = getMobileSuicaLoginPostUrl($);
 
     // ログインに必要なパラメータを取得
     const mobileSuicaLoginParams = getMobileSuicaLoginParams($);
