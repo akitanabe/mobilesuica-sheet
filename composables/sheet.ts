@@ -62,7 +62,9 @@ const displaydata = computed<SuicaData[]>(() => {
   }
 
   return suicadata.filter((suicadata) => {
-    return !suicadata.some((words) => filterRegexp.value.test(`${words}`));
+    return !suicadata.some((words) =>
+      filterRegexp.value.test(`${words}`.normalize('NFKC'))
+    );
   });
 });
 
