@@ -16,7 +16,6 @@
   } catch (e) {
     navigateTo('/');
   }
-  console.log('SSR');
 </script>
 <template>
   <v-container>
