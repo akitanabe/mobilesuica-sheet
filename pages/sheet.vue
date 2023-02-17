@@ -30,7 +30,7 @@
             {{ month }}
           </v-tab>
         </v-tabs>
-        <v-form>
+        <v-form @submit.prevent>
           <div>
             <v-text-field
               v-for="(word, i) in filterWords"
