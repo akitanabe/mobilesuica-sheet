@@ -1,7 +1,7 @@
-import { load } from 'cheerio';
 import type { CheerioAPI } from 'cheerio';
+import { load } from 'cheerio';
 import { extractCheerioVal } from '../utils/cheerio-helpers';
-import type { MobileSuicaLoginParams, SessionData } from './types';
+import type { MobileSuicaLoginParams, MobileSuicaSessionLogin } from './types';
 import MobilesuicaClient from '@/server/utils/mobilesuica-client';
 
 const mobileSuicaBaseUrl = 'https://www.mobilesuica.com';
@@ -75,11 +75,6 @@ function getMobileSuicaLoginPostUrl($: CheerioAPI): string {
 
 export default defineEventHandler(async (event) => {
   const client = new MobilesuicaClient();
-  const runtimeConfig = useRuntimeConfig();
-
-  const session = await useSession<SessionData>(event, {
-    password: runtimeConfig.secret,
-  });
 
   try {
     const res = await client.get(`${mobileSuicaBaseUrl}/index.aspx`);
@@ -91,14 +86,13 @@ export default defineEventHandler(async (event) => {
     // ログインに必要なパラメータを取得
     const mobileSuicaLoginParams = getMobileSuicaLoginParams($);
 
-    await session.update((data) => {
-      data.login = {
-        cookies: client.getCookies(),
-        params: mobileSuicaLoginParams,
-        url: postUrl,
-      };
-      return data;
-    });
+    const mobileSuicaSessionLogin: MobileSuicaSessionLogin = {
+      cookies: client.getCookies(),
+      params: mobileSuicaLoginParams,
+      url: postUrl,
+    };
+
+    event.context.session.login = mobileSuicaSessionLogin;
 
     // キャプチャを取得
     const captcha = await downloadCaptchaImage(client, $);

@@ -27,6 +27,7 @@
   "dependencies": {
     "cheerio": "1.0.0-rc.12",
     "got": "^12.5.3",
+    "h3-session": "^0.2.5",
     "iconv-lite": "^0.6.3"
   }
 }

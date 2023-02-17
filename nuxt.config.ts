@@ -6,9 +6,12 @@ export default defineNuxtConfig({
       extensions: ['.vue'],
     },
   ],
-  modules: ['~/modules/vuetify/module'],
-  typescript: { shim: false, typeCheck: true },
-  runtimeConfig: {
-    secret: process.env.secret,
+  modules: ['~/modules/vuetify/module', 'h3-session/nuxt'],
+  session: {
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true,
+    cookie: { secure: false },
   },
+  typescript: { shim: false, typeCheck: true },
 });

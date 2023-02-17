@@ -1,9 +1,10 @@
 import { load } from 'cheerio';
 import {
   MobileSuicaLoginParams,
+  MobileSuicaSessionAuth,
+  MobileSuicaSessionLogin,
   ResultError,
   ResultSuccess,
-  SessionData,
   UserInputBody,
 } from './types';
 import MobilesuicaClient from '@/server/utils/mobilesuica-client';
@@ -100,21 +101,19 @@ async function transition(client: MobilesuicaClient): Promise<void> {
 }
 
 export default defineEventHandler(async (event) => {
-  const runtimeConfig = useRuntimeConfig();
-  const session = await useSession<SessionData>(event, {
-    password: runtimeConfig.secret,
-  });
+  const { session } = event.context;
 
   try {
     const res: ResultSuccess = { ok: true };
 
-    if (session.data.login === undefined) {
+    if (session.login === undefined) {
       throw new Error('Should reflesh captcha image.');
     }
 
     const body = await readBody<UserInputBody>(event);
 
-    const { cookies, params, url } = session.data.login;
+    const { cookies, params, url } = event.context.session
+      .login as MobileSuicaSessionLogin;
 
     const client = new MobilesuicaClient({}, cookies);
 
@@ -122,13 +121,12 @@ export default defineEventHandler(async (event) => {
 
     await transition(client);
 
-    await session.update((data) => {
-      data.auth = {
-        cookies: client.getCookies(),
-        user: { email: body.email, password: body.password },
-      };
-      return data;
-    });
+    const auth: MobileSuicaSessionAuth = {
+      cookies: client.getCookies(),
+      user: { email: body.email, password: body.password },
+    };
+
+    session.auth = auth;
 
     return res;
   } catch (e) {
